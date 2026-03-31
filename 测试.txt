@@ -1,0 +1,37 @@
+后端：
+pip install -r requirements.txt
+
+python manage.py makemigrations
+python manage.py migrate
+
+python seed_demo.py
+
+python manage.py runserver 127.0.0.1:8000
+
+前端：
+cd ui
+npm install
+npm run dev
+
+http://localhost:5173
+
+拿Token：
+# 1) 登录拿 token
+# 密码可在运行 python seed_demo.py 时输出，或通过环境变量 DEMO_ADMIN_PASSWORD 指定
+# 将 <DEMO_ADMIN_PASSWORD> 替换为实际口令（不要在文档中硬编码演示口令）
+$loginBody = @{ username = "admin"; password = "<DEMO_ADMIN_PASSWORD>" } | ConvertTo-Json
+$loginResp = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8000/api/auth/login/" -ContentType "application/json" -Body $loginBody
+$token = $loginResp.data.token
+
+# 2) 可选：拼好请求头，后续调用接口用
+$headers = @{ Authorization = "Token $token" }
+
+# 3) 打印 token（确认拿到了）
+$token
+
+测试：
+cd <项目根目录>
+python parking_ai\main.py --simulate --backend http://127.0.0.1:8000 --lot-id 1 --token <YOUR_TOKEN>
+
+$headers = @{ Authorization = "Token <YOUR_TOKEN>" }
+(Invoke-RestMethod -Headers $headers -Uri "http://127.0.0.1:8000/api/parking/vehicles/?page=1&page_size=1").data.results[0].id

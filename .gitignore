@@ -1,0 +1,18 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.log
+.env
+.venv/
+venv/
+env/
+
+# Local data (should not be pushed)
+database/db.sqlite3
+media/
+
+# Node
+node_modules/
+ui/node_modules/
+dist/
+ui/dist/
